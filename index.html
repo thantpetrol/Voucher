@@ -411,7 +411,7 @@
     // ==================== LANGUAGE DICTIONARY (EN / MY) ====================
     const i18n = {
         en: {
-            appTitle: "Fuel Station POS",
+            appTitle: "Thant Fuel Station POS",
             tabVoucher: "Voucher",
             tabHistory: "History",
             tabSettings: "Settings & Prices",
@@ -476,7 +476,7 @@
             confirmDelete: "Are you sure you want to delete this voucher?"
         },
         my: {
-            appTitle: "စက်သုံးဆီ အရောင်းဘောင်ချာ",
+            appTitle: "သန့်စက်သုံးဆီဆိုင်အရောင်းဘောင်ချာ",
             tabVoucher: "ဘောင်ချာဖွင့်ရန်",
             tabHistory: "မှတ်တမ်းများ",
             tabSettings: "ဆက်တင်နှင့် ဈေးနှုန်း",
@@ -645,7 +645,6 @@
         updateDateTime();
         setInterval(updateDateTime, 1000);
         
-        // Apply theme class without password prompt on initial load
         const receipt = document.getElementById('receipt-58mm');
         receipt.className = currentTheme;
         document.querySelectorAll('.theme-btn').forEach(btn => {
