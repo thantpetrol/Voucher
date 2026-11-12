@@ -357,7 +357,17 @@
                 <div><span data-i18n="rDate">နေ့စွဲ</span>   : <span id="r-date"></span></div>
                 <div><span data-i18n="rVehicle">ယာဉ်အမှတ်</span>: <span class="r-bold" id="r-car"></span></div>
                 <div class="r-line"></div>
+                
+                <!-- Receipt Items Table Header for Structured Display -->
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 4px;">
+                    <span style="flex: 2;" data-i18n="thReceiptFuel">ဆီအမျိုးအစား</span>
+                    <span style="flex: 1; text-align: right;" data-i18n="thReceiptPrice">နှုန်း</span>
+                    <span style="flex: 1; text-align: right;" data-i18n="thReceiptLiter">လီတာ</span>
+                    <span style="flex: 1.2; text-align: right;" data-i18n="thReceiptAmount">သင့်ငွေ</span>
+                </div>
+                
                 <div id="r-items"></div>
+                
                 <div class="r-line"></div>
                 <div class="r-right r-bold r-total-box" style="font-size:14px;">
                     <span data-i18n="rTotal">စုစုပေါင်း</span>: <span id="r-total"></span> <span data-i18n="currency">ကျပ်</span>
@@ -418,7 +428,7 @@
             btnAddItem: "➕ Add Item to List",
             titlePurchasedItems: "2. Purchased Items",
             thFuel: "Fuel Type",
-            thPrice: "Price",
+            thPrice: "Price/L",
             thLiters: "Liters",
             thAmount: "Amount",
             lblGrandTotal: "Grand Total:",
@@ -446,6 +456,10 @@
             rDate: "Date",
             rVehicle: "Vehicle No",
             rTotal: "TOTAL",
+            thReceiptFuel: "Fuel",
+            thReceiptPrice: "Rate",
+            thReceiptLiter: "Liter",
+            thReceiptAmount: "Amount",
             btnPrintBT: "🔵 Print via Bluetooth 58mm",
             btnPrintSys: "📄 System / PDF Print",
             btnClose: "❌ Close",
@@ -479,7 +493,7 @@
             btnAddItem: "➕ စာရင်းထဲသို့ ထည့်မည်",
             titlePurchasedItems: "၂။ ဝယ်ယူထားသော စာရင်း",
             thFuel: "ဆီအမျိုးအစား",
-            thPrice: "နှုန်း",
+            thPrice: "တစ်လီတာနှုန်း",
             thLiters: "လီတာ",
             thAmount: "သင့်ငွေ",
             lblGrandTotal: "စုစုပေါင်းကျသင့်ငွေ -",
@@ -507,6 +521,10 @@
             rDate: "နေ့စွဲ",
             rVehicle: "ယာဉ်အမှတ်",
             rTotal: "စုစုပေါင်း",
+            thReceiptFuel: "ဆီအမျိုးအစား",
+            thReceiptPrice: "နှုန်း",
+            thReceiptLiter: "လီတာ",
+            thReceiptAmount: "သင့်ငွေ",
             btnPrintBT: "🔵 Bluetooth 58mm ဖြင့်ထုတ်မည်",
             btnPrintSys: "📄 PDF / ပရင်တာဖြင့်ထုတ်မည်",
             btnClose: "❌ ပိတ်မည်",
@@ -557,6 +575,7 @@
     let currentTheme = localStorage.getItem('fuel_voucher_theme') || 'theme-1';
 
     function setVoucherTheme(themeName) {
+        if (!verifyPassword()) return;
         currentTheme = themeName;
         localStorage.setItem('fuel_voucher_theme', themeName);
         const receipt = document.getElementById('receipt-58mm');
@@ -625,7 +644,17 @@
     function initApp() {
         updateDateTime();
         setInterval(updateDateTime, 1000);
-        setVoucherTheme(currentTheme);
+        
+        // Apply theme class without password prompt on initial load
+        const receipt = document.getElementById('receipt-58mm');
+        receipt.className = currentTheme;
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('onclick').includes(currentTheme)) {
+                btn.classList.add('active');
+            }
+        });
+
         loadSettingsUI();
         applyLanguage();
         generateNextVoucherNo();
@@ -818,15 +847,11 @@
         let itemsHtml = '';
         v.items.forEach(item => {
             itemsHtml += `
-                <div style="margin-bottom:6px;">
-                    <div class="r-bold">${item.fuel}</div>
-                    <div style="display:flex; justify-content:space-between;">
-                        <span>Price : ${item.rate.toLocaleString()} Ks</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between;">
-                        <span>Volume: ${item.liter.toFixed(3)} L</span>
-                        <span class="r-bold">Amount: ${item.amount.toLocaleString()} Ks</span>
-                    </div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; border-bottom: 1px dotted #eee; padding-bottom: 2px;">
+                    <span style="flex: 2; font-weight: bold;">${item.fuel}</span>
+                    <span style="flex: 1; text-align: right;">${item.rate}</span>
+                    <span style="flex: 1; text-align: right;">${item.liter.toFixed(2)}</span>
+                    <span style="flex: 1.2; text-align: right; font-weight: bold;">${item.amount.toLocaleString()}</span>
                 </div>
             `;
         });
@@ -852,7 +877,7 @@
         }
 
         filtered.forEach(v => {
-            let summary = v.items.map(i => `${i.fuel}: ${i.liter.toFixed(3)}L / ${i.amount.toLocaleString()} Ks`).join(' | ');
+            let summary = v.items.map(i => `${i.fuel} (${i.liter.toFixed(2)}L)`).join(', ');
             container.innerHTML += `
                 <div class="card">
                     <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary);">
