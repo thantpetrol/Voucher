@@ -163,7 +163,10 @@
             <div class="row">
                 <div class="col form-group">
                     <label data-i18n="lblVoucherNo">Voucher No</label>
-                    <input type="text" id="v-no" oninput="checkDuplicateVoucher()">
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" id="v-no" readonly oninput="checkDuplicateVoucher()">
+                        <button type="button" class="btn btn-warning btn-sm" style="margin-top:0;" onclick="unlockVoucherNo()" title="Edit Voucher No">✏️</button>
+                    </div>
                     <small id="v-no-warn" style="color:red; display:none;" data-i18n="warnDuplicate">⚠️ This number already exists!</small>
                 </div>
                 <div class="col form-group">
@@ -358,6 +361,27 @@
 </div>
 
 <script>
+    // ==================== PASSWORD PROTECTION (7777) ====================
+    function verifyPassword() {
+        const pwd = prompt(currentLang === 'my' ? "Password ရိုက်ထည့်ပါ -" : "Enter Password:");
+        if (pwd === null) return false;
+        if (pwd === "7777") {
+            return true;
+        } else {
+            alert(currentLang === 'my' ? "❌ Password မှားယွင်းနေပါသည်။" : "❌ Incorrect Password!");
+            return false;
+        }
+    }
+
+    function unlockVoucherNo() {
+        const vInput = document.getElementById('v-no');
+        if (!vInput.readOnly) return;
+        if (verifyPassword()) {
+            vInput.readOnly = false;
+            vInput.focus();
+        }
+    }
+
     // ==================== LANGUAGE DICTIONARY (EN / MY) ====================
     const i18n = {
         en: {
@@ -506,6 +530,7 @@
     }
 
     function toggleLanguage() {
+        if (!verifyPassword()) return;
         currentLang = currentLang === 'en' ? 'my' : 'en';
         localStorage.setItem('fuel_lang', currentLang);
         applyLanguage();
@@ -578,6 +603,9 @@
     }
 
     function switchTab(tab, el) {
+        if (tab === 'settings') {
+            if (!verifyPassword()) return;
+        }
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('tab-' + tab).classList.add('active');
@@ -594,7 +622,9 @@
             voucherCounter++;
             candidate = prefix + String(voucherCounter).padStart(4, '0');
         }
-        document.getElementById('v-no').value = candidate;
+        const vInput = document.getElementById('v-no');
+        vInput.value = candidate;
+        vInput.readOnly = true;
         document.getElementById('v-no-warn').style.display = 'none';
     }
 
@@ -607,6 +637,7 @@
     }
 
     function resetVoucherCounter() {
+        if (!verifyPassword()) return;
         if(confirm(t('confirmReset'))) {
             voucherCounter = 1;
             setStorage('fuel_v_counter', voucherCounter);
@@ -822,7 +853,9 @@
         const v = vouchers.find(item => item.id === id);
         if(!v) return;
         document.getElementById('editing-voucher-id').value = v.id;
-        document.getElementById('v-no').value = v.voucherNo;
+        const vInput = document.getElementById('v-no');
+        vInput.value = v.voucherNo;
+        vInput.readOnly = true;
         document.getElementById('car-no').value = v.carNo;
         document.getElementById('auto-datetime').value = v.dateTime;
         cart = [...v.items];
