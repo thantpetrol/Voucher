@@ -34,7 +34,6 @@
         }
         .sync-dot {
             width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; display: inline-block;
-            title: "Firebase Status";
         }
         .sync-dot.online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
 
@@ -106,40 +105,35 @@
         .r-line { border-top: 1px dashed #000; margin: 5px 0; }
         .r-header-box { padding: 2px 0; width: 100%; overflow: hidden; }
         
-        /* Single-line auto-fit header lines */
+        /* Single-line balanced header lines */
         .r-fit-line {
             white-space: nowrap;
             display: block;
             width: 100%;
             text-align: center;
             overflow: hidden;
-            line-height: 1.45;
+            text-overflow: clip;
+            line-height: 1.4;
+            margin: 0 auto;
         }
 
         /* ==================== 5 VOUCHER THEMES ==================== */
-        /* Theme 1: Classic Dashed (Default) */
         #receipt-58mm.theme-1 { border: 1px dashed #666; }
-        
-        /* Theme 2: Modern Solid Box */
         #receipt-58mm.theme-2 { border: 2px solid #000; padding: 8px; }
         #receipt-58mm.theme-2 .r-line { border-top: 1px solid #000; }
         #receipt-58mm.theme-2 .r-total-box { border: 1px solid #000; padding: 4px; margin-top: 4px; text-align: center; }
 
-        /* Theme 3: Double Border Formal */
         #receipt-58mm.theme-3 { border: 4px double #000; padding: 7px; }
         #receipt-58mm.theme-3 .r-line { border-top: 2px dotted #000; }
 
-        /* Theme 4: Bold Dark Header */
         #receipt-58mm.theme-4 { border: 1px solid #000; padding: 0 0 6px 0; }
         #receipt-58mm.theme-4 .r-header-box { background: #000; color: #fff; padding: 8px 4px; margin-bottom: 6px; }
         #receipt-58mm.theme-4 .r-header-box img { filter: invert(100%) grayscale(100%); }
         #receipt-58mm.theme-4 .r-body-pad { padding: 0 6px; }
 
-        /* Theme 5: Clean Minimalist */
         #receipt-58mm.theme-5 { border: none; border-top: 3px solid #000; border-bottom: 3px solid #000; font-family: Arial, sans-serif; font-size: 11.5px; }
         #receipt-58mm.theme-5 .r-line { border-top: 1px solid #ccc; }
 
-        /* Print Media Query for APK WebView Print */
         @media print {
             body * { visibility: hidden; }
             #receipt-58mm, #receipt-58mm * { visibility: visible; }
@@ -295,19 +289,31 @@
         </div>
 
         <div class="card">
-            <div class="card-title" data-i18n="titleShopInfo">🏪 ဆိုင်အချက်အလက်နှင့် လိုဂို</div>
+            <div class="card-title" data-i18n="titleShopInfo">🏪 ဆိုင်အချက်အလက်နှင့် ဖောင့် ဆက်တင်များ</div>
             <div class="form-group">
                 <label data-i18n="lblShopLogo">ဆိုင်လိုဂို (ကင်မရာ သို့မဟုတ် ဖုန်းထဲမှရွေးရန်)</label>
                 <input type="file" id="logo-input" accept="image/*" capture="environment" onchange="handleLogoUpload(event)">
                 <img id="logo-preview" src="" style="max-height:60px; margin-top:8px; display:none;">
             </div>
-            <div class="form-group">
-                <label data-i18n="lblShopName">ဆိုင်အမည်</label>
-                <input type="text" id="shop-name" placeholder="e.g., Shwe Sin Fuel Station">
+            <div class="row">
+                <div class="col form-group">
+                    <label data-i18n="lblShopName">ဆိုင်အမည်</label>
+                    <input type="text" id="shop-name" placeholder="Shop Name">
+                </div>
+                <div class="col form-group" style="max-width: 110px;">
+                    <label>နာမည် Font (px)</label>
+                    <input type="number" id="shop-name-font" value="13" min="8" max="22" step="0.5">
+                </div>
             </div>
-            <div class="form-group">
-                <label data-i18n="lblShopAddress">ဆိုင်လိပ်စာနှင့် ဖုန်းနံပါတ်</label>
-                <textarea id="shop-address" rows="2" placeholder="Enter address and phone number"></textarea>
+            <div class="row">
+                <div class="col form-group">
+                    <label data-i18n="lblShopAddress">ဆိုင်လိပ်စာနှင့် ဖုန်းနံပါတ်</label>
+                    <textarea id="shop-address" rows="3" placeholder="Enter address and phone number"></textarea>
+                </div>
+                <div class="col form-group" style="max-width: 110px;">
+                    <label>လိပ်စာ Font (px)</label>
+                    <input type="number" id="shop-addr-font" value="10.5" min="7" max="18" step="0.5">
+                </div>
             </div>
             <div class="form-group">
                 <label data-i18n="lblShopFooter">ဘောင်ချာအောက်ခြေ စာသား</label>
@@ -343,7 +349,7 @@
             <div class="r-center r-header-box" id="r-header-box">
                 <img id="r-logo" src="" style="display:none;">
                 <div class="r-bold r-fit-line" id="r-shop-name">SHOP NAME</div>
-                <div id="r-shop-address"></div>
+                <div id="r-shop-address" style="width: 100%; text-align: center;"></div>
             </div>
             <div class="r-body-pad">
                 <div class="r-line"></div>
@@ -427,7 +433,7 @@
             btnCamera: "📷 Camera",
             btnStorage: "📁 Storage",
             titleUpdatePrices: "⛽ Update Fuel Prices",
-            titleShopInfo: "🏪 Shop Information & Logo",
+            titleShopInfo: "🏪 Shop Information & Font Settings",
             lblShopLogo: "Shop Logo (Camera or Gallery)",
             lblShopName: "Shop Name",
             lblShopAddress: "Shop Address & Phone",
@@ -488,7 +494,7 @@
             btnCamera: "📷 ကင်မရာ",
             btnStorage: "📁 ဖိုင်များ",
             titleUpdatePrices: "⛽ စက်သုံးဆီ ဈေးနှုန်းပြင်ဆင်ရန်",
-            titleShopInfo: "🏪 ဆိုင်အချက်အလက်နှင့် လိုဂို",
+            titleShopInfo: "🏪 ဆိုင်အချက်အလက်နှင့် ဖောင့် ဆက်တင်များ",
             lblShopLogo: "ဆိုင်လိုဂို (ကင်မရာ သို့မဟုတ် ဖုန်းထဲမှရွေးရန်)",
             lblShopName: "ဆိုင်အမည်",
             lblShopAddress: "ဆိုင်လိပ်စာနှင့် ဖုန်းနံပါတ်",
@@ -518,7 +524,6 @@
         }
     };
 
-    // Default Language set to Myanmar ('my')
     let currentLang = localStorage.getItem('fuel_lang') || 'my';
 
     function t(key) {
@@ -548,7 +553,7 @@
         applyLanguage();
     }
 
-    // ==================== VOUCHER THEMES (5 DESIGNS) ====================
+    // ==================== VOUCHER THEMES ====================
     let currentTheme = localStorage.getItem('fuel_voucher_theme') || 'theme-1';
 
     function setVoucherTheme(themeName) {
@@ -557,7 +562,6 @@
         const receipt = document.getElementById('receipt-58mm');
         receipt.className = themeName;
 
-        // Update active state on all theme buttons
         document.querySelectorAll('.theme-btn').forEach(btn => {
             btn.classList.remove('active');
             if (btn.getAttribute('onclick').includes(themeName)) {
@@ -565,41 +569,26 @@
             }
         });
         if (document.getElementById('print-modal').style.display === 'block') {
-            fitReceiptHeaderText();
+            applyHeaderStyles();
         }
     }
 
-    // ==================== AUTO-FIT HEADER TEXT ON SINGLE LINE ====================
-    function fitSingleLineElement(el, maxFontSize, minFontSize = 6.5) {
-        if (!el || !el.textContent.trim()) return;
-        const parent = el.parentElement;
-        if (!parent) return;
-
-        // Available width inside 58mm receipt header
-        const style = window.getComputedStyle(parent);
-        const padLeft = parseFloat(style.paddingLeft) || 0;
-        const padRight = parseFloat(style.paddingRight) || 0;
-        const availableWidth = parent.clientWidth - padLeft - padRight - 2;
-
-        if (availableWidth <= 0) return;
-
-        let fontSize = maxFontSize;
-        el.style.fontSize = fontSize + 'px';
-
-        // Shrink font size smoothly until the entire line fits without wrapping
-        while (el.scrollWidth > availableWidth && fontSize > minFontSize) {
-            fontSize -= 0.3;
-            el.style.fontSize = fontSize.toFixed(1) + 'px';
-        }
-    }
-
-    function fitReceiptHeaderText() {
+    // ==================== UNIFORM HEADER & FONT STYLING ====================
+    function applyHeaderStyles() {
         const shopNameEl = document.getElementById('r-shop-name');
-        fitSingleLineElement(shopNameEl, 15, 7);
+        shopNameEl.style.fontSize = (settings.nameFont || 13) + 'px';
+        shopNameEl.innerText = (settings.shopName || '').trim();
 
-        const addrLines = document.querySelectorAll('#r-shop-address .r-addr-line');
-        addrLines.forEach(lineEl => {
-            fitSingleLineElement(lineEl, 11.5, 6.5);
+        const addrContainer = document.getElementById('r-shop-address');
+        addrContainer.innerHTML = '';
+        const lines = (settings.address || '').split(/\r?\n/).filter(l => l.trim() !== '');
+        
+        lines.forEach(line => {
+            const div = document.createElement('div');
+            div.className = 'r-fit-line';
+            div.style.fontSize = (settings.addrFont || 10.5) + 'px';
+            div.innerText = line.trim();
+            addrContainer.appendChild(div);
         });
     }
 
@@ -622,17 +611,17 @@
     let settings = getStorage('fuel_settings', {
         prices: { '92': 2850, '95': 2980, 'Diesel': 2650, 'Premium Diesel': 2750 },
         shopName: 'Aung Myin Chain Fuel Station',
-        address: 'No. (1), Pyay Road, Yangon. Phone: 091234567',
+        address: 'No. (1), Pyay Road, Yangon.\nPhone: 091234567',
         footer: 'Thank you very much for your patronage.',
-        logo: ''
+        logo: '',
+        nameFont: 13,
+        addrFont: 10.5
     });
     let vouchers = getStorage('fuel_vouchers', []);
     let voucherCounter = parseInt(getStorage('fuel_v_counter', 1)) || 1;
     let cart = [];
     let selectedFuel = '92';
-    let btCharacteristic = null;
 
-    // ==================== INIT ON LOAD ====================
     function initApp() {
         updateDateTime();
         setInterval(updateDateTime, 1000);
@@ -662,7 +651,6 @@
         if(tab === 'history') renderHistory();
     }
 
-    // ==================== VOUCHER NO & UNIQUE CHECK ====================
     function generateNextVoucherNo() {
         const prefix = "V-";
         let numStr = String(voucherCounter).padStart(4, '0');
@@ -696,7 +684,6 @@
         }
     }
 
-    // ==================== FUEL & AUTO LITER CALCULATION ====================
     function selectFuel(f) {
         selectedFuel = f;
         document.getElementById('current-rate').value = settings.prices[f];
@@ -729,7 +716,6 @@
         }
     }
 
-    // ==================== CART (MULTI-FUEL ITEMS) ====================
     function addToCart() {
         const rate = parseFloat(document.getElementById('current-rate').value);
         const amount = parseFloat(document.getElementById('buy-amount').value);
@@ -770,7 +756,6 @@
         document.getElementById('grand-total').innerText = total.toLocaleString();
     }
 
-    // ==================== SAVE & PREVIEW ====================
     function saveAndPreview() {
         if(cart.length === 0) { alert(t('alertAddItem')); return; }
         if(checkDuplicateVoucher()) { alert(t('alertDuplicate')); return; }
@@ -779,7 +764,7 @@
         const carNo = document.getElementById('car-no').value.trim() || '-';
         const dateTime = document.getElementById('auto-datetime').value;
         const editId = document.getElementById('editing-voucher-id').value;
-        const isoDate = new Date().toISOString().split('T')[0]; // For Date Search
+        const isoDate = new Date().toISOString().split('T')[0];
         const total = cart.reduce((sum, i) => sum + i.amount, 0);
 
         const voucherObj = {
@@ -808,7 +793,6 @@
 
         showPrintPreview(voucherObj);
 
-        // Reset Form
         cart = [];
         renderCart();
         document.getElementById('car-no').value = '';
@@ -823,20 +807,7 @@
             document.getElementById('r-logo').style.display = 'none';
         }
 
-        // Format Shop Name on single line
-        const shopNameEl = document.getElementById('r-shop-name');
-        shopNameEl.innerText = (settings.shopName || '').trim();
-
-        // Format Address & Phone lines so each entered line stays on a single neat line
-        const addrContainer = document.getElementById('r-shop-address');
-        addrContainer.innerHTML = '';
-        const lines = (settings.address || '').split(/\r?\n/).filter(l => l.trim() !== '');
-        lines.forEach(line => {
-            const div = document.createElement('div');
-            div.className = 'r-fit-line r-addr-line';
-            div.innerText = line.trim();
-            addrContainer.appendChild(div);
-        });
+        applyHeaderStyles();
 
         document.getElementById('r-vno').innerText = v.voucherNo;
         document.getElementById('r-date').innerText = v.dateTime;
@@ -859,18 +830,12 @@
         document.getElementById('r-items').innerHTML = itemsHtml;
         window.currentPrintingVoucher = v;
         document.getElementById('print-modal').style.display = 'block';
-
-        // Adjust font sizes automatically after modal renders
-        requestAnimationFrame(() => {
-            fitReceiptHeaderText();
-        });
     }
 
     function closeModal() {
         document.getElementById('print-modal').style.display = 'none';
     }
 
-    // ==================== HISTORY (SEARCH, EDIT, DELETE) ====================
     function renderHistory() {
         const searchDate = document.getElementById('search-date').value;
         const container = document.getElementById('history-list');
@@ -929,14 +894,12 @@
         cart = [...v.items];
         renderCart();
         
-        // Switch to POS tab
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('tab-pos').classList.add('active');
         document.querySelectorAll('.nav-tab')[0].classList.add('active');
     }
 
-    // ==================== SETTINGS & LOGO ====================
     function loadSettingsUI() {
         document.getElementById('price-92').value = settings.prices['92'];
         document.getElementById('price-95').value = settings.prices['95'];
@@ -945,6 +908,9 @@
         document.getElementById('shop-name').value = settings.shopName;
         document.getElementById('shop-address').value = settings.address;
         document.getElementById('shop-footer').value = settings.footer;
+        document.getElementById('shop-name-font').value = settings.nameFont || 13;
+        document.getElementById('shop-addr-font').value = settings.addrFont || 10.5;
+
         if(settings.logo) {
             document.getElementById('logo-preview').src = settings.logo;
             document.getElementById('logo-preview').style.display = 'block';
@@ -971,6 +937,8 @@
         settings.shopName = document.getElementById('shop-name').value;
         settings.address = document.getElementById('shop-address').value;
         settings.footer = document.getElementById('shop-footer').value;
+        settings.nameFont = parseFloat(document.getElementById('shop-name-font').value) || 13;
+        settings.addrFont = parseFloat(document.getElementById('shop-addr-font').value) || 10.5;
 
         setStorage('fuel_settings', settings);
         if(window.fbSaveSettings) window.fbSaveSettings(settings);
@@ -978,7 +946,6 @@
         alert(t('alertSettingsSaved'));
     }
 
-    // ==================== ANDROID PERMISSIONS & BLUETOOTH 58MM PRINT ====================
     async function requestCameraPerm() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -1016,10 +983,8 @@
         const receiptElement = document.getElementById('receipt-58mm');
         if(!receiptElement) return;
 
-        // Ensure header font sizes are fitted before capturing image
-        fitReceiptHeaderText();
+        applyHeaderStyles();
 
-        // 1. If using Android Bluetooth Print App (RawBT) -> Render Receipt as Image
         if (/Android/i.test(navigator.userAgent) && typeof html2canvas !== 'undefined') {
             try {
                 const originalBorder = receiptElement.style.border;
@@ -1041,14 +1006,12 @@
             }
         }
 
-        // 2. Fallback to WebView Print
         window.print();
     }
 
     initApp();
 </script>
 
-<!-- ==================== FIREBASE REALTIME DATABASE MODULE ==================== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
   import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-database.js";
@@ -1065,7 +1028,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // Connection Status Indicator
   const connectedRef = ref(db, ".info/connected");
   onValue(connectedRef, (snap) => {
       const dot = document.getElementById("firebase-status-dot");
@@ -1076,7 +1038,6 @@
       }
   });
 
-  // Realtime Sync: Language across all devices (Defaults to 'my')
   onValue(ref(db, 'fuel_pos/language'), (snapshot) => {
       const val = snapshot.val();
       if (val && (val === 'my' || val === 'en')) {
@@ -1086,12 +1047,10 @@
               applyLanguage();
           }
       } else {
-          // Initialize Firebase default language to Myanmar ('my')
           set(ref(db, 'fuel_pos/language'), 'my');
       }
   });
 
-  // Realtime Sync: Vouchers
   onValue(ref(db, 'fuel_pos/vouchers'), (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -1102,7 +1061,6 @@
       }
   });
 
-  // Realtime Sync: Settings & Prices
   onValue(ref(db, 'fuel_pos/settings'), (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -1113,7 +1071,6 @@
       }
   });
 
-  // Realtime Sync: Voucher Counter
   onValue(ref(db, 'fuel_pos/voucherCounter'), (snapshot) => {
       const val = snapshot.val();
       if (val) {
@@ -1123,7 +1080,6 @@
       }
   });
 
-  // Expose Save/Delete Functions to Global Scope
   window.fbSaveVoucher = (vObj) => set(ref(db, 'fuel_pos/vouchers/' + vObj.id), vObj);
   window.fbDeleteVoucher = (id) => remove(ref(db, 'fuel_pos/vouchers/' + id));
   window.fbSaveSettings = (sObj) => set(ref(db, 'fuel_pos/settings'), sObj);
