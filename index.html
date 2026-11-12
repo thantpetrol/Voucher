@@ -818,11 +818,14 @@
         let itemsHtml = '';
         v.items.forEach(item => {
             itemsHtml += `
-                <div style="margin-bottom:4px;">
+                <div style="margin-bottom:6px;">
                     <div class="r-bold">${item.fuel}</div>
                     <div style="display:flex; justify-content:space-between;">
-                        <span>${item.liter.toFixed(3)}L x ${item.rate}</span>
-                        <span>${item.amount.toLocaleString()}</span>
+                        <span>Price : ${item.rate.toLocaleString()} Ks</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Volume: ${item.liter.toFixed(3)} L</span>
+                        <span class="r-bold">Amount: ${item.amount.toLocaleString()} Ks</span>
                     </div>
                 </div>
             `;
@@ -849,7 +852,7 @@
         }
 
         filtered.forEach(v => {
-            let summary = v.items.map(i => `${i.fuel} (${i.liter}L)`).join(', ');
+            let summary = v.items.map(i => `${i.fuel}: ${i.liter.toFixed(3)}L / ${i.amount.toLocaleString()} Ks`).join(' | ');
             container.innerHTML += `
                 <div class="card">
                     <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary);">
