@@ -6,6 +6,8 @@
     <title>Fuel Station POS (58mm)</title>
     <!-- html2canvas Library for Image Receipt Printing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- QRCode.js Library for Generating Scannable QR Codes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -316,6 +318,10 @@
                 </div>
             </div>
             <div class="form-group">
+                <label data-i18n="lblPriceUrl">ဆီဈေးနှုန်းကြည့်ရန် ဝက်ဘ်ဆိုက် URL</label>
+                <input type="text" id="price-url" placeholder="https://thantpetrol.github.io/Thant-Petrol-Price/">
+            </div>
+            <div class="form-group">
                 <label data-i18n="lblShopFooter">ဘောင်ချာအောက်ခြေ စာသား</label>
                 <input type="text" id="shop-footer" placeholder="e.g., Thank you for your purchase!">
             </div>
@@ -372,6 +378,15 @@
                 <div class="r-right r-bold r-total-box" style="font-size:14px;">
                     <span data-i18n="rTotal">စုစုပေါင်း</span>: <span id="r-total"></span> <span data-i18n="currency">ကျပ်</span>
                 </div>
+                <div class="r-line"></div>
+                
+                <!-- QR Code & Price Link Section -->
+                <div class="r-center" style="margin: 6px 0;">
+                    <div style="font-size: 10px; font-weight: bold; margin-bottom: 4px;" data-i18n="rScanPrice">နေ့စဉ်ဆီဈေးနှုန်းကြည့်ရန် Scan လုပ်ပါ</div>
+                    <div id="qrcode-container" style="display: flex; justify-content: center; align-items: center; margin: 4px auto;"></div>
+                    <div style="font-size: 9px; margin-top: 3px; word-break: break-all;" id="r-price-url-text">thantpetrol.github.io</div>
+                </div>
+                
                 <div class="r-line"></div>
                 <div class="r-center" id="r-footer" style="margin-top:5px;">Thank You!</div>
                 <br>.
@@ -447,6 +462,7 @@
             lblShopLogo: "Shop Logo (Camera or Gallery)",
             lblShopName: "Shop Name",
             lblShopAddress: "Shop Address & Phone",
+            lblPriceUrl: "Fuel Price Website URL",
             lblShopFooter: "Voucher Footer Text",
             btnSaveSettings: "💾 Save Settings",
             titleResetVoucher: "🔄 Reset Voucher Number",
@@ -460,6 +476,7 @@
             thReceiptPrice: "Rate",
             thReceiptLiter: "Liter",
             thReceiptAmount: "Amount",
+            rScanPrice: "Scan to check daily fuel prices",
             btnPrintBT: "🔵 Print via Bluetooth 58mm",
             btnPrintSys: "📄 System / PDF Print",
             btnClose: "❌ Close",
@@ -512,6 +529,7 @@
             lblShopLogo: "ဆိုင်လိုဂို (ကင်မရာ သို့မဟုတ် ဖုန်းထဲမှရွေးရန်)",
             lblShopName: "ဆိုင်အမည်",
             lblShopAddress: "ဆိုင်လိပ်စာနှင့် ဖုန်းနံပါတ်",
+            lblPriceUrl: "ဆီဈေးနှုန်းကြည့်ရန် ဝက်ဘ်ဆိုက် URL",
             lblShopFooter: "ဘောင်ချာအောက်ခြေ စာသား",
             btnSaveSettings: "💾 ဆက်တင်များ သိမ်းဆည်းမည်",
             titleResetVoucher: "🔄 ဘောင်ချာနံပါတ် ပြန်စရန်",
@@ -525,6 +543,7 @@
             thReceiptPrice: "နှုန်း",
             thReceiptLiter: "လီတာ",
             thReceiptAmount: "သင့်ငွေ",
+            rScanPrice: "နေ့စဉ်ဆီဈေးနှုန်းကြည့်ရန် Scan လုပ်ပါ",
             btnPrintBT: "🔵 Bluetooth 58mm ဖြင့်ထုတ်မည်",
             btnPrintSys: "📄 PDF / ပရင်တာဖြင့်ထုတ်မည်",
             btnClose: "❌ ပိတ်မည်",
@@ -631,6 +650,7 @@
         prices: { '92': 2850, '95': 2980, 'Diesel': 2650, 'Premium Diesel': 2750 },
         shopName: 'Aung Myin Chain Fuel Station',
         address: 'No. (1), Pyay Road, Yangon.\nPhone: 091234567',
+        priceUrl: 'https://thantpetrol.github.io/Thant-Petrol-Price/',
         footer: 'Thank you very much for your patronage.',
         logo: '',
         nameFont: 13,
@@ -842,6 +862,24 @@
         document.getElementById('r-car').innerText = v.carNo;
         document.getElementById('r-total').innerText = v.total.toLocaleString();
         document.getElementById('r-footer').innerText = settings.footer;
+        
+        // Update URL text display
+        const targetUrl = settings.priceUrl || 'https://thantpetrol.github.io/Thant-Petrol-Price/';
+        document.getElementById('r-price-url-text').innerText = targetUrl.replace('https://', '').replace(/\/$/, '');
+
+        // Generate QR Code dynamically
+        const qrContainer = document.getElementById('qrcode-container');
+        qrContainer.innerHTML = '';
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrContainer, {
+                text: targetUrl,
+                width: 100,
+                height: 100,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
 
         let itemsHtml = '';
         v.items.forEach(item => {
@@ -934,6 +972,7 @@
         document.getElementById('price-pdiesel').value = settings.prices['Premium Diesel'];
         document.getElementById('shop-name').value = settings.shopName;
         document.getElementById('shop-address').value = settings.address;
+        document.getElementById('price-url').value = settings.priceUrl || 'https://thantpetrol.github.io/Thant-Petrol-Price/';
         document.getElementById('shop-footer').value = settings.footer;
         document.getElementById('shop-name-font').value = settings.nameFont || 13;
         document.getElementById('shop-addr-font').value = settings.addrFont || 10.5;
@@ -963,6 +1002,7 @@
         settings.prices['Premium Diesel'] = parseFloat(document.getElementById('price-pdiesel').value) || 0;
         settings.shopName = document.getElementById('shop-name').value;
         settings.address = document.getElementById('shop-address').value;
+        settings.priceUrl = document.getElementById('price-url').value.trim() || 'https://thantpetrol.github.io/Thant-Petrol-Price/';
         settings.footer = document.getElementById('shop-footer').value;
         settings.nameFont = parseFloat(document.getElementById('shop-name-font').value) || 13;
         settings.addrFont = parseFloat(document.getElementById('shop-addr-font').value) || 10.5;
