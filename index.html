@@ -100,7 +100,7 @@
             line-height: 1.35;
             padding: 6px;
         }
-        #receipt-58mm img { max-width: 40mm; max-height: 25mm; display: block; margin: 0 auto 5px auto; filter: grayscale(100%) contrast(150%); object-fit: contain; }
+        #receipt-58mm img#r-logo { max-width: 40mm; max-height: 25mm; display: block; margin: 0 auto 5px auto; filter: grayscale(100%) contrast(150%); object-fit: contain; }
         .r-center { text-align: center; }
         .r-right { text-align: right; }
         .r-bold { font-weight: bold; }
@@ -117,6 +117,30 @@
             text-overflow: clip;
             line-height: 1.4;
             margin: 0 auto;
+        }
+
+        /* Compact QR Box for 58mm */
+        .r-qr-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin: 4px 0;
+            padding: 3px;
+            border: 1px solid #000;
+            border-radius: 3px;
+        }
+        #qrcode-container {
+            flex-shrink: 0;
+            background: #fff;
+            padding: 2px;
+            line-height: 0;
+        }
+        #qrcode-container img, #qrcode-container canvas {
+            display: block !important;
+            margin: 0 !important;
+            filter: contrast(250%) !important;
+            image-rendering: pixelated;
         }
 
         /* ==================== 5 VOUCHER THEMES ==================== */
@@ -380,15 +404,16 @@
                 </div>
                 <div class="r-line"></div>
                 
-                <!-- QR Code & Price Link Section -->
-                <div class="r-center" style="margin: 6px 0;">
-                    <div style="font-size: 10px; font-weight: bold; margin-bottom: 4px;" data-i18n="rScanPrice">နေ့စဉ်ဆီဈေးနှုန်းကြည့်ရန် Scan လုပ်ပါ</div>
-                    <div id="qrcode-container" style="display: flex; justify-content: center; align-items: center; margin: 4px auto;"></div>
-                    <div style="font-size: 9px; margin-top: 3px; word-break: break-all;" id="r-price-url-text">thantpetrol.github.io</div>
+                <!-- Compact Side-by-Side QR Code & Price Link Section -->
+                <div class="r-qr-flex">
+                    <div id="qrcode-container"></div>
+                    <div style="text-align: left; flex: 1; overflow: hidden;">
+                        <div style="font-size: 9.5px; font-weight: bold; line-height: 1.25;" data-i18n="rScanPrice">နေ့စဉ်ဆီဈေးနှုန်းကြည့်ရန် Scan လုပ်ပါ</div>
+                        <div style="font-size: 8.5px; margin-top: 2px; word-break: break-all; line-height: 1.15;" id="r-price-url-text">thantpetrol.github.io</div>
+                    </div>
                 </div>
                 
-                <div class="r-line"></div>
-                <div class="r-center" id="r-footer" style="margin-top:5px;">Thank You!</div>
+                <div class="r-center" id="r-footer" style="margin-top:4px; font-size: 11px;">Thank You!</div>
                 <br>.
             </div>
         </div>
@@ -476,7 +501,7 @@
             thReceiptPrice: "Rate",
             thReceiptLiter: "Liter",
             thReceiptAmount: "Amount",
-            rScanPrice: "Scan to check daily fuel prices",
+            rScanPrice: "Scan for daily fuel prices",
             btnPrintBT: "🔵 Print via Bluetooth 58mm",
             btnPrintSys: "📄 System / PDF Print",
             btnClose: "❌ Close",
@@ -543,7 +568,7 @@
             thReceiptPrice: "နှုန်း",
             thReceiptLiter: "လီတာ",
             thReceiptAmount: "သင့်ငွေ",
-            rScanPrice: "နေ့စဉ်ဆီဈေးနှုန်းကြည့်ရန် Scan လုပ်ပါ",
+            rScanPrice: "နေ့စဉ်ဆီဈေးကြည့်ရန် Scan ဖတ်ပါ",
             btnPrintBT: "🔵 Bluetooth 58mm ဖြင့်ထုတ်မည်",
             btnPrintSys: "📄 PDF / ပရင်တာဖြင့်ထုတ်မည်",
             btnClose: "❌ ပိတ်မည်",
@@ -867,17 +892,17 @@
         const targetUrl = settings.priceUrl || 'https://thantpetrol.github.io/Thant-Petrol-Price/';
         document.getElementById('r-price-url-text').innerText = targetUrl.replace('https://', '').replace(/\/$/, '');
 
-        // Generate QR Code dynamically
+        // Generate Compact & High-Readability QR Code (Low-ink friendly)
         const qrContainer = document.getElementById('qrcode-container');
         qrContainer.innerHTML = '';
         if (typeof QRCode !== 'undefined') {
             new QRCode(qrContainer, {
                 text: targetUrl,
-                width: 100,
-                height: 100,
+                width: 64,
+                height: 64,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.M
+                correctLevel: QRCode.CorrectLevel.L
             });
         }
 
