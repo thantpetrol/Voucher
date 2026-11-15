@@ -685,6 +685,23 @@
     let cart = [];
     let selectedFuel = '92';
 
+    // ==================== ONE-TIME PRICE FETCH ====================
+    async function fetchLatestPrices() {
+        if (!settings.priceUrl) return;
+        try {
+            const response = await fetch(settings.priceUrl);
+            const data = await response.json();
+            if (data && data.prices) {
+                settings.prices = { ...settings.prices, ...data.prices };
+                setStorage('fuel_settings', settings);
+                loadSettingsUI();
+                renderFuelButtons();
+            }
+        } catch (e) {
+            console.log("Price fetch skipped or failed:", e);
+        }
+    }
+
     function initApp() {
         updateDateTime();
         setInterval(updateDateTime, 1000);
@@ -701,6 +718,7 @@
         loadSettingsUI();
         applyLanguage();
         generateNextVoucherNo();
+        fetchLatestPrices();
     }
     window.addEventListener('DOMContentLoaded', initApp);
 
