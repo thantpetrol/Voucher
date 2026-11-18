@@ -80,13 +80,34 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; overflow-y: auto; padding: 15px; }
         .modal-content { background: white; margin: auto; padding: 15px; border-radius: 8px; max-width: 360px; }
         
-        /* Theme Switcher Buttons */
-        .theme-switcher { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; justify-content: center; }
+        /* Theme Switcher Buttons with Visual Preview */
+        .theme-switcher { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; justify-content: center; }
         .theme-btn {
-            padding: 5px 8px; font-size: 11px; border: 1px solid #cbd5e1; background: #f8fafc;
-            border-radius: 4px; cursor: pointer; font-weight: bold; color: #334155;
+            padding: 8px 10px; font-size: 12px; border: 1px solid #cbd5e1; background: #f8fafc;
+            border-radius: 6px; cursor: pointer; font-weight: bold; color: #334155;
+            display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 60px;
+            transition: all 0.2s;
         }
-        .theme-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .theme-btn.active { background: #eff6ff; color: var(--primary); border-color: var(--secondary); box-shadow: 0 0 0 1px var(--secondary); }
+        
+        /* Mini Visual Previews inside Buttons */
+        .theme-preview-box {
+            width: 36px; height: 44px; background: #fff; border-radius: 3px; display: flex; flex-direction: column; padding: 3px; gap: 2px;
+        }
+        .tp-line { height: 2px; background: #cbd5e1; width: 100%; border-radius: 1px; }
+        .tp-line.dark { background: #1e293b; }
+        
+        /* Theme 1 Preview */
+        .theme-btn[onclick*="theme-1"] .theme-preview-box { border: 1px dashed #666; }
+        /* Theme 2 Preview */
+        .theme-btn[onclick*="theme-2"] .theme-preview-box { border: 2px solid #000; }
+        /* Theme 3 Preview */
+        .theme-btn[onclick*="theme-3"] .theme-preview-box { border: 3px double #000; }
+        /* Theme 4 Preview */
+        .theme-btn[onclick*="theme-4"] .theme-preview-box { border: 1px solid #000; padding: 0; }
+        .theme-btn[onclick*="theme-4"] .tp-header { background: #000; height: 10px; width: 100%; margin-bottom: 2px; }
+        /* Theme 5 Preview */
+        .theme-btn[onclick*="theme-5"] .theme-preview-box { border: none; border-top: 2px solid #000; border-bottom: 2px solid #000; }
 
         /* 58mm Thermal Paper Base Styling */
         #receipt-58mm {
@@ -283,11 +304,26 @@
         <div class="card">
             <div class="card-title" data-i18n="titleVoucherTheme">🎨 ဘောင်ချာဒီဇိုင်း ရွေးချယ်ရန် (၅ မျိုး)</div>
             <div class="theme-switcher" id="settings-theme-switcher">
-                <button class="theme-btn active" onclick="setVoucherTheme('theme-1')">1. Classic</button>
-                <button class="theme-btn" onclick="setVoucherTheme('theme-2')">2. Modern Box</button>
-                <button class="theme-btn" onclick="setVoucherTheme('theme-3')">3. Double Line</button>
-                <button class="theme-btn" onclick="setVoucherTheme('theme-4')">4. Bold Header</button>
-                <button class="theme-btn" onclick="setVoucherTheme('theme-5')">5. Minimal</button>
+                <button class="theme-btn active" onclick="setVoucherTheme('theme-1')">
+                    <div class="theme-preview-box"><div class="tp-line dark"></div><div class="tp-line"></div><div class="tp-line"></div></div>
+                    <span>1. Classic</span>
+                </button>
+                <button class="theme-btn" onclick="setVoucherTheme('theme-2')">
+                    <div class="theme-preview-box" style="padding:2px;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
+                    <span>2. Modern</span>
+                </button>
+                <button class="theme-btn" onclick="setVoucherTheme('theme-3')">
+                    <div class="theme-preview-box" style="border-style: double;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
+                    <span>3. Double</span>
+                </button>
+                <button class="theme-btn" onclick="setVoucherTheme('theme-4')">
+                    <div class="theme-preview-box"><div class="tp-header"></div><div class="tp-line"></div></div>
+                    <span>4. Bold</span>
+                </button>
+                <button class="theme-btn" onclick="setVoucherTheme('theme-5')">
+                    <div class="theme-preview-box" style="border-top:2px solid #000; border-bottom:2px solid #000;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
+                    <span>5. Minimal</span>
+                </button>
             </div>
         </div>
 
@@ -365,13 +401,28 @@
     <div class="modal-content">
         <div class="card-title no-print" data-i18n="titlePrintPreview">🖨️ 58mm ဘောင်ချာ နမူနာ</div>
         
-        <!-- Quick Theme Switcher Inside Preview -->
+        <!-- Quick Theme Switcher Inside Preview with Visual Previews -->
         <div class="theme-switcher no-print" id="modal-theme-switcher">
-            <button class="theme-btn active" onclick="setVoucherTheme('theme-1')">Theme 1</button>
-            <button class="theme-btn" onclick="setVoucherTheme('theme-2')">Theme 2</button>
-            <button class="theme-btn" onclick="setVoucherTheme('theme-3')">Theme 3</button>
-            <button class="theme-btn" onclick="setVoucherTheme('theme-4')">Theme 4</button>
-            <button class="theme-btn" onclick="setVoucherTheme('theme-5')">Theme 5</button>
+            <button class="theme-btn active" onclick="setVoucherTheme('theme-1')">
+                <div class="theme-preview-box"><div class="tp-line dark"></div><div class="tp-line"></div><div class="tp-line"></div></div>
+                <span>1</span>
+            </button>
+            <button class="theme-btn" onclick="setVoucherTheme('theme-2')">
+                <div class="theme-preview-box" style="padding:2px;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
+                <span>2</span>
+            </button>
+            <button class="theme-btn" onclick="setVoucherTheme('theme-3')">
+                <div class="theme-preview-box" style="border-style: double;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
+                <span>3</span>
+            </button>
+            <button class="theme-btn" onclick="setVoucherTheme('theme-4')">
+                <div class="theme-preview-box"><div class="tp-header"></div><div class="tp-line"></div></div>
+                <span>4</span>
+            </button>
+            <button class="theme-btn" onclick="setVoucherTheme('theme-5')">
+                <div class="theme-preview-box" style="border-top:2px solid #000; border-bottom:2px solid #000;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
+                <span>5</span>
+            </button>
         </div>
 
         <!-- 58mm Receipt Area -->
