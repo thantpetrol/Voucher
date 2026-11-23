@@ -201,20 +201,19 @@
             image-rendering: pixelated;
         }
 
-        /* ==================== 5 VOUCHER THEMES ==================== */
-        #receipt-58mm.theme-1 { border: 1px dashed #666; }
+        /* ==================== 5 VOUCHER THEMES (NO FULL-VOUCHER BORDER) ==================== */
+        #receipt-58mm.theme-1 { border: none; border-radius: 0; }
         
-        #receipt-58mm.theme-2 { border: 2px solid #000; padding: 8px; }
+        #receipt-58mm.theme-2 { border: none; border-radius: 0; padding: 8px; }
         #receipt-58mm.theme-2 .r-line { border-top: 1px solid #000; }
         #receipt-58mm.theme-2 .r-total-box { border: 1px solid #000; padding: 4px; margin-top: 4px; text-align: center; }
 
-        #receipt-58mm.theme-3 { border: 4px double #000; padding: 7px; }
+        #receipt-58mm.theme-3 { border: none; border-radius: 0; padding: 7px; }
         #receipt-58mm.theme-3 .r-line { border-top: 2px dotted #000; }
 
-        /* NEW THEME 4: Rounded Framed Receipt with Outlined Header & Pill Total */
         #receipt-58mm.theme-4 { 
-            border: 1.5px solid #000; 
-            border-radius: 10px; 
+            border: none; 
+            border-radius: 0; 
             padding: 7px; 
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -236,14 +235,13 @@
             margin-top: 4px; 
         }
 
-        #receipt-58mm.theme-5 { border: none; border-top: 3px solid #000; border-bottom: 3px solid #000; font-family: Arial, sans-serif; font-size: 11.5px; }
+        #receipt-58mm.theme-5 { border: none; border-radius: 0; font-family: Arial, sans-serif; font-size: 11.5px; }
         #receipt-58mm.theme-5 .r-line { border-top: 1px solid #ccc; }
 
         @media print {
             body * { visibility: hidden; }
             #receipt-58mm, #receipt-58mm * { visibility: visible; }
-            #receipt-58mm { position: absolute; left: 0; top: 0; width: 58mm; margin: 0; }
-            #receipt-58mm.theme-1 { border: none; }
+            #receipt-58mm { position: absolute; left: 0; top: 0; width: 58mm; margin: 0; border: none !important; border-radius: 0 !important; }
             .no-print { display: none !important; }
         }
     </style>
@@ -1230,18 +1228,11 @@
 
         if (/Android/i.test(navigator.userAgent) && typeof html2canvas !== 'undefined') {
             try {
-                const originalBorder = receiptElement.style.border;
-                if (currentTheme === 'theme-1') {
-                    receiptElement.style.border = 'none';
-                }
-
                 const canvas = await html2canvas(receiptElement, {
                     scale: 2,
                     backgroundColor: '#ffffff',
                     useCORS: true
                 });
-
-                receiptElement.style.border = originalBorder;
 
                 const base64Image = canvas.toDataURL('image/png');
                 window.location.href = "rawbt:" + base64Image;
