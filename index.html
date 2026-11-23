@@ -57,6 +57,32 @@
         .row { display: flex; gap: 10px; }
         .col { flex: 1; }
         
+        /* Checkbox Styling */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .checkbox-wrapper span {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text);
+            user-select: none;
+        }
+
         /* Buttons */
         .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 5px; }
         .btn-primary { background: var(--secondary); }
@@ -103,9 +129,9 @@
         .theme-btn[onclick*="theme-2"] .theme-preview-box { border: 2px solid #000; }
         /* Theme 3 Preview */
         .theme-btn[onclick*="theme-3"] .theme-preview-box { border: 3px double #000; }
-        /* Theme 4 Preview */
-        .theme-btn[onclick*="theme-4"] .theme-preview-box { border: 1px solid #000; padding: 0; }
-        .theme-btn[onclick*="theme-4"] .tp-header { background: #000; height: 10px; width: 100%; margin-bottom: 2px; }
+        /* Theme 4 Preview (New Rounded Framed Badge Style) */
+        .theme-btn[onclick*="theme-4"] .theme-preview-box { border: 1.5px solid #000; border-radius: 7px; padding: 3px; }
+        .theme-btn[onclick*="theme-4"] .tp-badge { border: 1px solid #000; border-radius: 3px; height: 8px; width: 100%; margin-bottom: 2px; }
         /* Theme 5 Preview */
         .theme-btn[onclick*="theme-5"] .theme-preview-box { border: none; border-top: 2px solid #000; border-bottom: 2px solid #000; }
 
@@ -140,6 +166,17 @@
             margin: 0 auto;
         }
 
+        /* Status Note Box on Receipt */
+        .r-status-note {
+            border: 1.5px solid #000;
+            text-align: center;
+            font-weight: bold;
+            padding: 4px;
+            margin: 5px 0;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+
         /* Compact QR Box for 58mm */
         .r-qr-flex {
             display: flex;
@@ -166,6 +203,7 @@
 
         /* ==================== 5 VOUCHER THEMES ==================== */
         #receipt-58mm.theme-1 { border: 1px dashed #666; }
+        
         #receipt-58mm.theme-2 { border: 2px solid #000; padding: 8px; }
         #receipt-58mm.theme-2 .r-line { border-top: 1px solid #000; }
         #receipt-58mm.theme-2 .r-total-box { border: 1px solid #000; padding: 4px; margin-top: 4px; text-align: center; }
@@ -173,10 +211,30 @@
         #receipt-58mm.theme-3 { border: 4px double #000; padding: 7px; }
         #receipt-58mm.theme-3 .r-line { border-top: 2px dotted #000; }
 
-        #receipt-58mm.theme-4 { border: 1px solid #000; padding: 0 0 6px 0; }
-        #receipt-58mm.theme-4 .r-header-box { background: #000; color: #fff; padding: 8px 4px; margin-bottom: 6px; }
-        #receipt-58mm.theme-4 .r-header-box img { filter: invert(100%) grayscale(100%); }
-        #receipt-58mm.theme-4 .r-body-pad { padding: 0 6px; }
+        /* NEW THEME 4: Rounded Framed Receipt with Outlined Header & Pill Total */
+        #receipt-58mm.theme-4 { 
+            border: 1.5px solid #000; 
+            border-radius: 10px; 
+            padding: 7px; 
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #receipt-58mm.theme-4 .r-header-box { 
+            border: 1px solid #000; 
+            border-radius: 6px; 
+            padding: 6px 4px; 
+            margin-bottom: 5px; 
+        }
+        #receipt-58mm.theme-4 .r-line { 
+            border-top: 1.5px solid #000; 
+            margin: 6px 0; 
+        }
+        #receipt-58mm.theme-4 .r-total-box { 
+            border: 1.5px solid #000; 
+            border-radius: 6px; 
+            padding: 5px; 
+            text-align: center; 
+            margin-top: 4px; 
+        }
 
         #receipt-58mm.theme-5 { border: none; border-top: 3px solid #000; border-bottom: 3px solid #000; font-family: Arial, sans-serif; font-size: 11.5px; }
         #receipt-58mm.theme-5 .r-line { border-top: 1px solid #ccc; }
@@ -229,6 +287,11 @@
                 <label data-i18n="lblDateTime">နေ့စွဲနှင့် အချိန် (အလိုအလျောက်)</label>
                 <input type="text" id="auto-datetime" readonly>
             </div>
+            <!-- Paid but fuel not yet taken Checkbox -->
+            <label class="checkbox-wrapper" for="paid-not-taken">
+                <input type="checkbox" id="paid-not-taken">
+                <span data-i18n="chkPaidNotTaken">ငွေရှင်းပြီး ဆီမယူသေး</span>
+            </label>
         </div>
 
         <div class="card">
@@ -317,8 +380,8 @@
                     <span>3. Double</span>
                 </button>
                 <button class="theme-btn" onclick="setVoucherTheme('theme-4')">
-                    <div class="theme-preview-box"><div class="tp-header"></div><div class="tp-line"></div></div>
-                    <span>4. Bold</span>
+                    <div class="theme-preview-box"><div class="tp-badge"></div><div class="tp-line"></div></div>
+                    <span>4. Framed</span>
                 </button>
                 <button class="theme-btn" onclick="setVoucherTheme('theme-5')">
                     <div class="theme-preview-box" style="border-top:2px solid #000; border-bottom:2px solid #000;"><div class="tp-line dark"></div><div class="tp-line"></div></div>
@@ -416,7 +479,7 @@
                 <span>3</span>
             </button>
             <button class="theme-btn" onclick="setVoucherTheme('theme-4')">
-                <div class="theme-preview-box"><div class="tp-header"></div><div class="tp-line"></div></div>
+                <div class="theme-preview-box"><div class="tp-badge"></div><div class="tp-line"></div></div>
                 <span>4</span>
             </button>
             <button class="theme-btn" onclick="setVoucherTheme('theme-5')">
@@ -437,6 +500,10 @@
                 <div><span data-i18n="rVoucher">ဘောင်ချာ</span>: <span class="r-bold" id="r-vno"></span></div>
                 <div><span data-i18n="rDate">နေ့စွဲ</span>   : <span id="r-date"></span></div>
                 <div><span data-i18n="rVehicle">ယာဉ်အမှတ်</span>: <span class="r-bold" id="r-car"></span></div>
+                
+                <!-- Paid But Fuel Not Yet Taken Note -->
+                <div id="r-paid-note" class="r-status-note" style="display:none;" data-i18n="chkPaidNotTaken">ငွေရှင်းပြီး ဆီမယူသေး</div>
+
                 <div class="r-line"></div>
                 
                 <!-- Receipt Items Table Header for Structured Display -->
@@ -510,6 +577,7 @@
             lblVehicleNo: "Vehicle No",
             phVehicleNo: "e.g., 1A/1234",
             lblDateTime: "Date & Time (Auto)",
+            chkPaidNotTaken: "ငွေရှင်းပြီး ဆီမယူသေး",
             titleSelectFuel: "1. Select Fuel Type",
             lblPricePerLiter: "Price per Liter (Ks)",
             lblAmount: "Amount (Ks)",
@@ -577,6 +645,7 @@
             lblVehicleNo: "ယာဉ်အမှတ်",
             phVehicleNo: "ဥပမာ - 1A/1234",
             lblDateTime: "နေ့စွဲနှင့် အချိန် (အလိုအလျောက်)",
+            chkPaidNotTaken: "ငွေရှင်းပြီး ဆီမယူသေး",
             titleSelectFuel: "၁။ ဆီအမျိုးအစား ရွေးချယ်ပါ",
             lblPricePerLiter: "တစ်လီတာဈေးနှုန်း (ကျပ်)",
             lblAmount: "ကျသင့်ငွေ (ကျပ်)",
@@ -907,6 +976,7 @@
         const editId = document.getElementById('editing-voucher-id').value;
         const isoDate = new Date().toISOString().split('T')[0];
         const total = cart.reduce((sum, i) => sum + i.amount, 0);
+        const paidNotTaken = document.getElementById('paid-not-taken').checked;
 
         const voucherObj = {
             id: editId ? editId : 'ID_' + Date.now(),
@@ -914,6 +984,7 @@
             carNo: carNo,
             dateTime: dateTime,
             isoDate: isoDate,
+            paidNotTaken: paidNotTaken,
             items: [...cart],
             total: total
         };
@@ -937,6 +1008,7 @@
         cart = [];
         renderCart();
         document.getElementById('car-no').value = '';
+        document.getElementById('paid-not-taken').checked = false;
         generateNextVoucherNo();
     }
 
@@ -956,6 +1028,15 @@
         document.getElementById('r-total').innerText = v.total.toLocaleString();
         document.getElementById('r-footer').innerText = settings.footer;
         
+        // Show/Hide "ငွေရှင်းပြီး ဆီမယူသေး" note on receipt
+        const paidNoteEl = document.getElementById('r-paid-note');
+        if (v.paidNotTaken) {
+            paidNoteEl.innerText = "ငွေရှင်းပြီး ဆီမယူသေး";
+            paidNoteEl.style.display = 'block';
+        } else {
+            paidNoteEl.style.display = 'none';
+        }
+
         // Update URL text display
         const targetUrl = settings.priceUrl || 'https://thantpetrol.github.io/Thant-Petrol-Price/';
 
@@ -1007,6 +1088,7 @@
 
         filtered.forEach(v => {
             let summary = v.items.map(i => `${i.fuel} (${i.liter.toFixed(2)}L)`).join(', ');
+            let statusTag = v.paidNotTaken ? `<div style="display:inline-block; background:#fef3c7; color:#b45309; border:1px solid #f59e0b; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; margin-bottom:4px;">ငွေရှင်းပြီး ဆီမယူသေး</div>` : '';
             container.innerHTML += `
                 <div class="card">
                     <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary);">
@@ -1014,6 +1096,7 @@
                         <span>${v.total.toLocaleString()} ${t('currency')}</span>
                     </div>
                     <div style="font-size:12px; color:#64748b; margin:4px 0;">${v.dateTime}</div>
+                    ${statusTag}
                     <div style="font-size:13px; margin-bottom:8px;">${summary}</div>
                     <div style="display:flex; gap:6px;">
                         <button class="btn btn-success btn-sm" onclick='showPrintPreview(${JSON.stringify(v)})'>${t('btnPrint')}</button>
@@ -1048,6 +1131,7 @@
         vInput.readOnly = true;
         document.getElementById('car-no').value = v.carNo;
         document.getElementById('auto-datetime').value = v.dateTime;
+        document.getElementById('paid-not-taken').checked = !!v.paidNotTaken;
         cart = [...v.items];
         renderCart();
         
@@ -1147,7 +1231,9 @@
         if (/Android/i.test(navigator.userAgent) && typeof html2canvas !== 'undefined') {
             try {
                 const originalBorder = receiptElement.style.border;
-                receiptElement.style.border = 'none';
+                if (currentTheme === 'theme-1') {
+                    receiptElement.style.border = 'none';
+                }
 
                 const canvas = await html2canvas(receiptElement, {
                     scale: 2,
